@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       requird: true,
     },
+    quizCreated: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
