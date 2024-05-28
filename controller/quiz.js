@@ -6,19 +6,18 @@ const createQuiz = async (req, res) => {
     const userId = req.userId;
     const { slides } = req.body;
 
+    const numberOfQuestions = slides.length;
+
     const quiz = new Quiz({
       userId,
       slides,
     });
-    // if (!slides) {
-    //   return res.status(400).json({
-    //     errorMessage: "Bad request",
-    //   });
-    // }
 
     await quiz.save();
 
-    await User.findByIdAndUpdate(userId, { $inc: { quizCreated: 1 } });
+    await User.findByIdAndUpdate(userId, {
+      $inc: { quizCreated: 1, questionsCreated: numberOfQuestions },
+    });
 
     res.status(201).json({ message: "Quiz created successfully", quiz });
   } catch (error) {
@@ -43,7 +42,6 @@ const getQuizById = async (req, res) => {
   const { quizId } = req.params;
 
   try {
-    // Find quiz by quizId and populate user details
     const quiz = await Quiz.findById(quizId);
 
     if (!quiz) {

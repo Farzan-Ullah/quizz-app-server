@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    questionsCreated: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );

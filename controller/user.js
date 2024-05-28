@@ -82,4 +82,25 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const getUserStats = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId).select(
+      "quizCreated questionsCreated"
+    );
+
+    if (!user) {
+      return res.status(404).json({ errorMessage: "User not found" });
+    }
+
+    res.json({
+      quizCreated: user.quizCreated,
+      questionsCreated: user.questionsCreated,
+    });
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    res.status(500).json({ errorMessage: "Failed to fetch user stats" });
+  }
+};
+
+module.exports = { registerUser, loginUser, getUserStats };
