@@ -55,4 +55,49 @@ const getQuizById = async (req, res) => {
   }
 };
 
-module.exports = { createQuiz, getQuizByUser, getQuizById };
+const deleteQuizById = async (req, res) => {
+  const { quizId } = req.params;
+
+  try {
+    const quiz = await Quiz.findById(quizId);
+
+    if (!quiz) {
+      return res.status(404).json({ errorMessage: "Quiz not found" });
+    }
+
+    await Quiz.findByIdAndDelete(quizId);
+
+    res.json({ message: "Quiz deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting quiz:", error);
+    res.status(500).json({ errorMessage: "Failed to delete quiz" });
+  }
+};
+
+const editQuizById = async (req, res) => {
+  const { quizId } = req.params;
+  const { slides } = req.body;
+
+  try {
+    const quiz = await Quiz.findById(quizId);
+
+    if (!quiz) {
+      return res.status(404).json({ errorMessage: "Quiz not found" });
+    }
+
+    await Quiz.findByIdAndUpdate(quizId, { slides });
+
+    res.json({ message: "Quiz updated successfully" });
+  } catch (error) {
+    console.error("Error updating quiz:", error);
+    res.status(500).json({ errorMessage: "Failed to update quiz" });
+  }
+};
+
+module.exports = {
+  createQuiz,
+  getQuizByUser,
+  getQuizById,
+  deleteQuizById,
+  editQuizById,
+};

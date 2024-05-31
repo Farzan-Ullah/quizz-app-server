@@ -9,5 +9,7 @@ router.use(verifyToken);
 router.post("/create", quizController.createQuiz);
 router.get("/quizz", quizController.getQuizByUser);
 router.get("/quizz/:quizId", quizController.getQuizById);
+router.delete("/delete-quiz/:quizId", quizController.deleteQuizById);
+router.put("/update/:quizId", quizController.editQuizById)
 
 module.exports = router;
