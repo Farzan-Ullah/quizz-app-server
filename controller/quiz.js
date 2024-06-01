@@ -39,10 +39,11 @@ const getQuizByUser = async (req, res) => {
 };
 
 const getQuizById = async (req, res) => {
-  const { quizId } = req.params;
-
   try {
+    const { quizId } = req.params;
+    console.log("quizId", quizId);
     const quiz = await Quiz.findById(quizId);
+    console.log(quizId);
 
     if (!quiz) {
       return res.status(404).json({ errorMessage: "Quiz not found" });
