@@ -4,12 +4,13 @@ const User = require("../models/user");
 const createQuiz = async (req, res) => {
   try {
     const userId = req.userId;
-    const { slides } = req.body;
+    const { slides, quizName } = req.body;
 
     const numberOfQuestions = slides.length;
 
     const quiz = new Quiz({
       userId,
+      quizName,
       slides,
     });
 
@@ -38,12 +39,21 @@ const getQuizByUser = async (req, res) => {
   }
 };
 
+const getAllQuizzes = async (req, res) => {
+  try {
+    const quizzes = await Quiz.find({});
+    res.json({ quizzes });
+  } catch (error) {
+    console.error("Error fetching all quizzes:", error);
+    res.status(500).json({ errorMessage: "Failed to fetch quizzes" });
+  }
+};
+
 const getQuizById = async (req, res) => {
   try {
     const { quizId } = req.params;
-    console.log("quizId", quizId);
+
     const quiz = await Quiz.findById(quizId);
-    console.log(quizId);
 
     if (!quiz) {
       return res.status(404).json({ errorMessage: "Quiz not found" });
@@ -95,10 +105,36 @@ const editQuizById = async (req, res) => {
   }
 };
 
+const updateImpressions = async (req, res) => {
+  try {
+    const { quizId } = req.params;
+
+    const quiz = await Quiz.findByIdAndUpdate(
+      quizId,
+      { $inc: { totalImpressions: 1 } },
+      { new: true }
+    );
+
+    if (!quiz) {
+      return res.status(404).json({ errorMessage: "Quiz not found" });
+    }
+
+    res.json({
+      message: "Impressions updated",
+      totalImpressions: quiz.totalImpressions,
+    });
+  } catch (error) {
+    console.error("Error updating impressions:", error);
+    res.status(500).json({ errorMessage: "Failed to update impressions" });
+  }
+};
+
 module.exports = {
   createQuiz,
   getQuizByUser,
   getQuizById,
   deleteQuizById,
   editQuizById,
+  updateImpressions,
+  getAllQuizzes,
 };

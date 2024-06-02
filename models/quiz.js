@@ -7,6 +7,9 @@ const quizSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    quizName: {
+      type: String,
+    },
     slides: [
       {
         question: {
@@ -39,6 +42,10 @@ const quizSchema = new mongoose.Schema(
         },
       },
     ],
+    totalImpressions: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
