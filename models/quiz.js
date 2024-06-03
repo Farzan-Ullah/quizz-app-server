@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const quizSchema = new mongoose.Schema(
   {
-    userId: {
+    refUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -39,6 +39,18 @@ const quizSchema = new mongoose.Schema(
         },
         correctAnswer: {
           type: Number,
+        },
+        attempts: {
+          type: Number,
+          default: 0,
+        },
+        correct: {
+          type: Number,
+          default: 0,
+        },
+        incorrect: {
+          type: Number,
+          default: 0,
         },
       },
     ],

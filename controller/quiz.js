@@ -9,7 +9,7 @@ const createQuiz = async (req, res) => {
     const numberOfQuestions = slides.length;
 
     const quiz = new Quiz({
-      userId,
+      refUserId: userId,
       quizName,
       slides,
     });
@@ -129,6 +129,36 @@ const updateImpressions = async (req, res) => {
   }
 };
 
+const updateQuizStatistics = async (req, res) => {
+  const { quizId, slideIndex, isCorrect } = req.body;
+
+  try {
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    if (quiz.slides[slideIndex]) {
+      quiz.slides[slideIndex].attempts += 1;
+      if (isCorrect) {
+        quiz.slides[slideIndex].correct += 1;
+      } else {
+        quiz.slides[slideIndex].incorrect += 1;
+      }
+
+      await quiz.save();
+      return res
+        .status(200)
+        .json({ message: "Statistics updated successfully", quiz });
+    } else {
+      return res.status(400).json({ message: "Invalid slide index" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createQuiz,
   getQuizByUser,
@@ -137,4 +167,5 @@ module.exports = {
   editQuizById,
   updateImpressions,
   getAllQuizzes,
+  updateQuizStatistics,
 };
